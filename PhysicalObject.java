@@ -24,10 +24,11 @@ package footybees;
 
 public class PhysicalObject {
 
-	private static double x_vector;
-	private static double y_vector;
-	private static double z_vector;
-	private static double mass;
+	protected static double x_vector;		// newtons
+	protected static double y_vector;		// newtons
+	protected static double z_vector;		// newtons
+	protected static double[] position;		// meters
+	protected static double mass;			// kilo-grams
 	
 	public PhysicalObject() {
 		x_vector = 0.0;
@@ -62,6 +63,18 @@ public class PhysicalObject {
 		return z_vector;
 	}
 	
+	public double getXPos(){
+		return position[0];
+	}
+	
+	public double getYPos(){
+		return position[1];
+	}
+	
+	public double getZPos(){
+		return position[2];
+	}
+	
 	public double getMass() {
 		return mass;
 	}
@@ -76,6 +89,18 @@ public class PhysicalObject {
 	
 	public void setZ(double z) {
 		z_vector = z;
+	}
+	
+	public void setXPos(double x) {
+		position[0] = x;
+	}
+	
+	public void setYPos(double y) {
+		position[1] = y;
+	}
+	
+	public void setZPos(double z) {
+		position[2] = z;
 	}
 	
 	public void setMass(double m) {

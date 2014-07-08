@@ -31,15 +31,18 @@ public class Driver {
 		System.out.println("Soccer Simulator for AI Testing:");
 		System.out.println("Footy-Bees");
 		System.out.println("Author: Devin Rusnak  June 2014");
+		System.out.println("initializing...");
 		
 		// game variable declaration and initialization
-		System.out.println("initializing...");
 		Physics laws = Physics.getPhysics();
 		Decision mind = Decision.getDecision();
 		Field pitch = Field.getPitch();
-		Referee ref = Referee.getRef();
 		GUI view = GUI.getGUI();
+		Referee ref = Referee.getRef();
 
+		// Physics Equation Testing
+		System.out.println(laws.terminalSpeed(1.0));
+		System.out.println(laws.rollingFriction(300.0));
 	}
 
 }

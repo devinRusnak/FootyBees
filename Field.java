@@ -42,6 +42,8 @@ public class Field {
 	
 	private Field() {
 		ball = Ball.getBall();
+		ball.setX(5.0);
+		ball.setY(5.0);
 		penalty_box = new Dimension();
 		goalie_box = new Dimension();
 		center_circle = new Dimension();
@@ -67,25 +69,6 @@ public class Field {
 		if(ball == null)
 			pitch = new Field();
 		return ball;
-	}
-	
-	/**
-	 * 
-	 * @param w
-	 * @param l
-	 * @return
-	 */
-	public static int updateBallPosition(double w, double l, double h) {
-		
-		
-		// check out-of-bounds
-		// return non-zero if ball is out
-		if(true) {
-			
-			return 0;
-		}
-		else
-			return 0;
 	}
 	
 	/**

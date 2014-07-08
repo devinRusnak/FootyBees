@@ -23,14 +23,26 @@
 package footybees;
 
 import java.util.Timer;
+import java.util.TimerTask;
 
 public class Referee {
 
 	private static Referee instance;
 	private static Timer time;
+	private long counter;
+	protected static boolean clock_running;
+	protected int mins;
+	protected int secs;
+	protected int stopage;
 	
 	private Referee() {
 		time = new Timer();
+		clock_running = true;
+		time.scheduleAtFixedRate(new Updater(), 0, 250);
+		counter = 0;
+		secs = 0;
+		mins = 0;
+		stopage = 1;
 	}
 	
 	/**
@@ -42,4 +54,71 @@ public class Referee {
 			instance = new Referee();
 		return instance;
 	}
-}
+	
+	/**
+	 *  Toggles the clock running.
+	 */
+	public static void toggleTime() {
+		if(clock_running)
+			clock_running = false;
+		else
+			clock_running = true;
+	}
+	
+	/**
+	 *  Embedded class that is used to create a task that the 
+	 *  referee timer can call every cycle. 
+	 */
+	private class Updater extends TimerTask {
+
+		/**
+		 * Updating function that gets called every 250 milliseconds by the 
+		 * referee class timer. The long counter acts to allow the clock to
+		 * be updated every second. 
+		 * 	Every 250 milliseconds:
+		 * 		counter is updated.
+		 * 		physics update is called.
+		 */
+		@Override
+		public void run() {			
+			counter++;
+			
+			// update clock if time is running
+			if(clock_running && (counter % 4 == 0)) {
+				GUI.getGUI().setClock(tick());				
+			}
+			
+			// update physics
+			Physics.getPhysics().update();
+			
+			
+			// Soccer Rule Enforcing ... TODO
+			
+			// redraw? TODO
+		}
+		
+		/**
+		 * Keeps track of the time and creates/returns a 
+		 * formated string that displays the time orderly.
+		 * 
+		 * @return	a new string that contains the time formated.
+		 */
+		private String tick() {
+			secs++; // tock!
+			
+			if(secs == 60) {
+				secs = 0;
+				mins++;
+			}
+			if( (secs%60) < 10 && mins < 10)
+				return new String(mins + "0 : 0" + secs);
+			else if ( (secs%60) < 10 )
+				return new String(mins + " : 0" + secs);
+			else if ( mins < 10 )
+				return new String(mins + "0 : " + secs);
+			else
+				return new String(mins + " : " + secs);
+		}
+		
+	} // end Updater Class
+} // end Referee Class

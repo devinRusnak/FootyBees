@@ -48,9 +48,11 @@ public class GUI extends JFrame{
 
 	// class instance variables
 	private static final long serialVersionUID = 1L;
+	private static JLabel time;
 	private static GUI instance = null;	
 	private static JFrame frame = null;
 	private static JLabel status = null;
+	private static JTextArea consoleView = null;
 	private static double scale = 0.5;
 
 	private GUI() {
@@ -59,8 +61,7 @@ public class GUI extends JFrame{
 		DrawingPanel field;
 		JPanel stats, scoreBoard;
 		JScrollPane console;
-		JLabel score1, score2, time;
-		JTextArea consoleView;
+		JLabel score1, score2;		
 		JMenuBar menuBar;
 		JMenu file;
 		JMenuItem exit, newGame;
@@ -167,5 +168,29 @@ public class GUI extends JFrame{
 		if(instance == null)
 			instance = new GUI();
 		return instance;
+	}
+	
+	/**
+	 * 
+	 * @param t
+	 */
+	public void setClock(String t) {
+		time.setText(t);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getClock() {
+		return time.getText();
+	}
+	
+	public static void setText(String s) {
+		consoleView.setText(s);
+	}
+	
+	public static String getText() {
+		return consoleView.getText();
 	}
 }

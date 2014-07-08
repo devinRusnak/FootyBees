@@ -33,6 +33,7 @@ public class DrawingPanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		int width = (int)(Field.getWidth()*4);
 		int length = (int)(Field.getLength()*4);
+		int ball_size = (int)(Field.getBall().getSize()*30);
 		
 		// background
 		g.setColor(Color.lightGray);
@@ -69,8 +70,12 @@ public class DrawingPanel extends JPanel {
 		g.drawLine((50 + 55), 394, (50 + 55), 460);
 		g.drawLine((50 + 55 + 161), 394, (50 + 55 + 161), 460);
 		
-		// ball TODO
-		
+		// ball TODO - >>>>>>really small<<<<<<
+		g.drawOval((int)Field.getBall().getXPos()-(ball_size/2), (int)Field.getBall().getYPos()-(ball_size/2), 
+				ball_size, ball_size);
+		g.setColor(Color.orange);
+		g.fillOval((int)Field.getBall().getXPos()-(ball_size/2), (int)Field.getBall().getYPos()-(ball_size/2), 
+				ball_size, ball_size);
 		
 		
 		// draw players TODO

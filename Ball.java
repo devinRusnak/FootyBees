@@ -24,16 +24,22 @@ package footybees;
 
 public class Ball extends PhysicalObject {
 	
-	private static double elasticity;
-	private static double[] position;
+	// class instance object
 	private static Ball instance;
+	// class instance variables
+	private static double elasticity;
+	private static double pressure;		// atmospheres
+	private static double radius;
 	
 	private Ball() {
+		mass = 0.45;
+		radius = 0.115;
 		elasticity = 1.0;			// k_constant
 		position = new double[3];
-		position[0] = 0.0;			// xPos
-		position[1] = 0.0;			// yPos
+		position[0] = 100;			// xPos
+		position[1] = 100;			// yPos
 		position[2] = 0.0;			// zPos
+		pressure = 1.0;
 	}
 	
 	/**
@@ -44,6 +50,10 @@ public class Ball extends PhysicalObject {
 		if(instance == null)
 			instance = new Ball();
 		return instance;
+	}
+	
+	public double getSize() {
+		return radius*2;
 	}
 	
 	public double getK() {
