@@ -203,6 +203,10 @@ public class GUI extends JFrame{
 		return instance;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public static JFrame getFrame() {
 		return frame;
 	}

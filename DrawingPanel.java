@@ -26,14 +26,14 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial")	// ?
 public class DrawingPanel extends JPanel {
 
 	
 	public void paintComponent(Graphics g) {
 		int width = (int)(Field.getWidth()*4);
 		int length = (int)(Field.getLength()*4);
-		int ball_size = (int)(Field.getBall().getSize()*30);
+		int ball_size = (int)(Field.getBall().getSize()*20);
 		
 		// background
 		g.setColor(Color.lightGray);
@@ -70,12 +70,17 @@ public class DrawingPanel extends JPanel {
 		g.drawLine((50 + 55), 394, (50 + 55), 460);
 		g.drawLine((50 + 55 + 161), 394, (50 + 55 + 161), 460);
 		
-		// ball TODO - >>>>>>really small<<<<<<
+		// ball 
 		g.drawOval((int)Ball.getBall().getXPos()-(ball_size/2), (int)Ball.getBall().getYPos()-(ball_size/2), 
 				ball_size, ball_size);
 		g.setColor(Color.orange);
 		g.fillOval((int)Ball.getBall().getXPos()-(ball_size/2), (int)Ball.getBall().getYPos()-(ball_size/2), 
 				ball_size, ball_size);
+		g.setColor(Color.yellow);
+		g.drawOval( ((int)Ball.getBall().getXPos() - ((int)Ball.getBall().getZPos()*3) ), 
+				((int)Ball.getBall().getYPos() - ((int)Ball.getBall().getZPos()*3) ), 
+				((int)Ball.getBall().getZPos()*6), 
+				((int)Ball.getBall().getZPos()*6) ); 	// draw circle proportional to the height of the ball
 		
 		
 		// draw players TODO

@@ -211,10 +211,12 @@ public class Physics {
 		}
 		
 		if(Ball.getBall().getZPos() + velocity <= 0.0) {	// collision w/ ground check
-			System.out.println("boom");
+			//System.out.println("boom");
 			if(Math.abs(Ball.getBall().getZ()) < 1.03) {	// if collision is weak enough, stop bouncing
 				Ball.getBall().setZPos(0.0);
 				Ball.getBall().setZ(0.0);
+				
+				// Damp X,Y velocity from impact ????? TODO
 			}
 			else											// strong collision, bouncing ball
 				Ball.getBall().setZ( Ball.getBall().getZ() * -0.7 ); // simplified collision, reverse direction of force and reduce it by 30%.

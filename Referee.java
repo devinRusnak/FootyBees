@@ -38,7 +38,8 @@ public class Referee {
 	private Referee() {
 		time = new Timer();
 		clock_running = true;
-		time.scheduleAtFixedRate(new Updater(), 0, 250);
+		time.scheduleAtFixedRate(new Updater(), 5000, 250);
+		time.scheduleAtFixedRate(new GraphicsUpdater(), 0, 50);
 		counter = 0;
 		secs = 0;
 		mins = 0;
@@ -66,8 +67,8 @@ public class Referee {
 	}
 	
 	/**
-	 *  Embedded class that is used to create a task that the 
-	 *  referee timer can call every cycle. 
+	 *  This timer task is used to time the updating of all the physics 
+	 *  engine items.
 	 */
 	private class Updater extends TimerTask {
 
@@ -78,6 +79,9 @@ public class Referee {
 		 * 	Every 250 milliseconds:
 		 * 		counter is updated.
 		 * 		physics update is called.
+		 * 		
+		 *  Note: This timer was a bit slow to issue the drawing pane to be 
+		 *  	  updated, so made the other timer.
 		 */
 		@Override
 		public void run() {			
@@ -96,8 +100,6 @@ public class Referee {
 			
 			// Soccer Rule Enforcing ... TODO
 			
-			// redraw? TODO
-			GUI.getFrame().repaint();
 		}
 		
 		/**
@@ -123,5 +125,16 @@ public class Referee {
 				return new String(mins + " : " + secs);
 		}
 		
-	} // end Updater Class
+	} // end Updater class
+	
+	// This timer task is used to update the graphics of the field.
+	private class GraphicsUpdater extends TimerTask {
+
+		@Override
+		public void run() {
+			GUI.getFrame().repaint();	// redraw field, ball, etc
+		}
+		
+	}// end GraphicsUpdater class
+	
 } // end Referee Class
