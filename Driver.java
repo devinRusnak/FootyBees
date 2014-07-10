@@ -23,7 +23,8 @@
 package footybees;
 
 public class Driver {
-
+	public static boolean debug = true;
+	
 	// MAIN!!!
 	public static void main(String[] args) {
 		
@@ -39,10 +40,13 @@ public class Driver {
 		Field pitch = Field.getPitch();
 		GUI view = GUI.getGUI();
 		Referee ref = Referee.getRef();
+		System.out.println("..ready");
 
 		// Physics Equation Testing
-		System.out.println(laws.terminalSpeed(1.0));
+		System.out.println(laws.terminalSpeed(Ball.getBall().getMass()));
 		System.out.println(laws.rollingFriction(300.0));
+		System.out.println(laws.airDrag( (Ball.getBall().getSize()/2)*2*Math.PI, 2.0) ); 
+
 	}
 
 }

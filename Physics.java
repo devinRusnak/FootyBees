@@ -28,16 +28,15 @@ public class Physics {
 	public static Physics instance;
 	
 	// class constants
-	private static final double AIR_DENSITY = 1.0;
-	private static final double DRAG_COEFFICIENT = 0.0026;
-	private static final double ROLLING_COEFFICIENT = 0.31;
-	private static final double GRAVITY = 9.8;
-	private static final double TIME = 0.25;
+	private static final double AIR_DENSITY = 1.25;				// kg/m^3
+	private static final double DRAG_COEFFICIENT = 0.0026;		// text-book
+	private static final double ROLLING_COEFFICIENT = 0.31;		// online soccer problem
+	private static final double GRAVITY = 9.8;					// m/s^2
+	private static final double TIME = 0.25;					// frequency of update getting called
 	
-	// constructor - empty
+	// constructor
 	private Physics() {	}
 	
-	Ball ball = Ball.getBall();
 	/**
 	 * Class instance access method.
 	 * @return instance of class Physics
@@ -60,32 +59,39 @@ public class Physics {
 		return 0.0;
 	}
 	
-	// kick the ball
-	//   updates the vector velocities of the ball
+	/**
+	 * Kicks the ball at the specified angle to the coordinate plane.
+	 * The force is given as the force along the path of flight so the 
+	 * component vectors need to be derived with some trig.
+	 * 
+	 * @param force - imparted newtons along the vector sum
+	 * @param angleXY - angle counter-clockwise from the positive x-axis towards the positive y-axis, pitch?
+	 * @param angleXZ - angle counter-clockwise from the positive x-axis towards the positive Z-axis, yaw?
+	 */
 	public void kick(double force, double angleXY, double angleXZ) {
 		double x, y, z;
 		// compute z_vector
-		z = Field.getBall().getZ() + (force * Math.sin(angleXZ));		// v[0z] = v[0]sin(a[0])
-		Field.getBall().setZ(z);
+		z = Ball.getBall().getZ() + (force * Math.sin(angleXZ));		// v[0z] = v[0]sin(a[0])
+		Ball.getBall().setZ(z);
 		
 		// compute y_vector
-		y = Field.getBall().getY() + (force * Math.sin(angleXY));		// v[0y] = v[0]sin(a[0])
-		Field.getBall().setY(y);
+		y = Ball.getBall().getY() + (force * Math.sin(angleXY));		// v[0y] = v[0]sin(a[0])
+		Ball.getBall().setY(y);
 		
 		// compute x_vector
-		x = Field.getBall().getX() + (force * Math.cos(angleXY));		// v[0x] = v[0]cos(a[0]) 
-		Field.getBall().setX(x);
+		x = Ball.getBall().getX() + (force * Math.cos(angleXY));		// v[0x] = v[0]cos(a[0]) 
+		Ball.getBall().setX(x);
 	}
 	
 	
 	/**
-	 * Force(drag) = -1/2 * C * rho * A * v^2
+	 * Force(drag) = -1/2 * rho * v^2 * C * A
 	 * @param area - surface area of object
 	 * @param velocity - speed of object
 	 * @return the positive value of the force due to drag, in Newtons.
 	 */
 	public double airDrag(double area, double velocity) {
-		return ( 0.5*DRAG_COEFFICIENT*AIR_DENSITY*area*velocity*velocity );
+		return ( 0.5*AIR_DENSITY*(velocity*velocity)*DRAG_COEFFICIENT*area );
 	}
 	
 	/**
@@ -118,93 +124,108 @@ public class Physics {
 		//	...apply forces, then calculate distance moved.
 		
 		// *** X vector computation *** //
-		accel = ball.getX() / ball.getMass();				
-		outside_forces = airDrag( 2*Math.PI*(ball.getSize()/2), Math.abs(accel*TIME) );
+		accel = Ball.getBall().getX() / Ball.getBall().getMass();				
+		outside_forces = airDrag( 2*Math.PI*(Ball.getBall().getSize()/2), Math.abs(accel*TIME) );
 		
-		if(ball.getZPos() <= 1.0) 				// on ground apply rolling friction too
-			outside_forces += rollingFriction( Math.abs(ball.getX()) );
+		if(Ball.getBall().getZPos() <= 1.0) 							// on ground apply rolling friction too
+			outside_forces += rollingFriction( Math.abs(Ball.getBall().getX()) );
 		
-		if(ball.getX() < 0.0)					// update force
-			ball.setX(ball.getX() + outside_forces);
+		if(Ball.getBall().getX() < 0.0)						// update force
+			Ball.getBall().setX(Ball.getBall().getX() + outside_forces);
 		else
-			ball.setX(ball.getX() - outside_forces);
+			Ball.getBall().setX(Ball.getBall().getX() - outside_forces);
 		
-		if( Math.abs(ball.getX()) < 0.025 )		// damped check, simplifies rolling w/ torque and what not
-			ball.setX(0.0);
+		if( Math.abs(Ball.getBall().getX()) < 0.025 )		// damped check, simplifies rolling w/ torque and what not
+			Ball.getBall().setX(0.0);
 		
-		accel = ball.getX() / ball.getMass();		// get acceleration 
-		velocity = accel * TIME;					// get velocity
+		accel = Ball.getBall().getX() / Ball.getBall().getMass();		// get acceleration 
+		velocity = accel * TIME;										// get velocity
 		
-		if( Math.abs(velocity) > terminalSpeed(ball.getMass()) ) {	// terminal check
+		if( Math.abs(velocity) > terminalSpeed(Ball.getBall().getMass()) ) {	// terminal check
 			System.out.println("terminal dude");
 			if(velocity < 0.0 )
-				velocity =  -1.0 * terminalSpeed(ball.getMass());
+				velocity =  -1.0 * terminalSpeed(Ball.getBall().getMass());
 			else
-				velocity = terminalSpeed(ball.getMass());
+				velocity = terminalSpeed(Ball.getBall().getMass());
 		}
-		ball.setXPos( ball.getXPos() + velocity );		// update x position			
+		if( Math.abs(Ball.getBall().getX()) < 0.03 ) 		// stop the ball from rolling slowly forever
+			Ball.getBall().setX(0.0);
+		else
+			Ball.getBall().setXPos( Ball.getBall().getXPos() + velocity );		// update x position			
 		
 				
 		// *** Y vector computation *** //
-		accel = ball.getY() / ball.getMass();
-		outside_forces = airDrag( 2*Math.PI*(ball.getSize()/2), Math.abs(accel*TIME) );
+		accel = Ball.getBall().getY() / Ball.getBall().getMass();
+		outside_forces = airDrag( 2*Math.PI*(Ball.getBall().getSize()/2), Math.abs(accel*TIME) );
 
-		if(ball.getZPos() <= 1.0) 				// on ground apply rolling friction too
-			outside_forces += rollingFriction( Math.abs(ball.getY()) );
+		if(Ball.getBall().getZPos() <= 1.0) 							// on ground apply rolling friction too
+			outside_forces += rollingFriction( Math.abs(Ball.getBall().getY()) );
 
-		if(ball.getY() < 0.0)					// update force
-			ball.setY(ball.getY() + outside_forces);
+		if(Ball.getBall().getY() < 0.0)						// update force
+			Ball.getBall().setY(Ball.getBall().getY() + outside_forces);
 		else
-			ball.setY(ball.getY() - outside_forces);
+			Ball.getBall().setY(Ball.getBall().getY() - outside_forces);
 		
-		if( Math.abs(ball.getY()) < 0.025 )		// damped check, simplifies rolling w/ torque and what not
-			ball.setY(0.0);
+		if( Math.abs(Ball.getBall().getY()) < 0.025 )		// damped check, simplifies rolling w/ torque and what not
+			Ball.getBall().setY(0.0);
 		
-		accel = ball.getY() / ball.getMass();	// get acceleration
-		velocity = accel * TIME;				// get velocity
+		accel = Ball.getBall().getY() / Ball.getBall().getMass();	// get acceleration
+		velocity = accel * TIME;									// get velocity
 		
-		if( Math.abs(velocity) > terminalSpeed(ball.getMass()) ) {	// terminal check
+		if( Math.abs(velocity) > terminalSpeed(Ball.getBall().getMass()) ) {	// terminal check
 			System.out.println("terminal dude");
 			if(velocity < 0.0 )
-				velocity =  -1.0 * terminalSpeed(ball.getMass());
+				velocity =  -1.0 * terminalSpeed(Ball.getBall().getMass());
 			else
-				velocity = terminalSpeed(ball.getMass());
+				velocity = terminalSpeed(Ball.getBall().getMass());
 		}
-		ball.setYPos( ball.getYPos() + velocity );		// update y position
+		if( Math.abs(Ball.getBall().getY()) < 0.03 ) 		// stop the ball from rolling slowly forever
+			Ball.getBall().setY(0.0);
+		else
+			Ball.getBall().setYPos( Ball.getBall().getYPos() + velocity );		// update y position
 
 		
 		// *** Z vector computation *** //
-		accel = ball.getZ() / ball.getMass();
-		System.out.println("Az: " + accel);
-		if( ball.getZ() >= 0.0 ) {		// ball is accelerating upward
-			outside_forces = airDrag( 2*Math.PI*(ball.getSize()/2), Math.abs(accel*TIME) );
+		accel = Ball.getBall().getZ() / Ball.getBall().getMass();
+		
+		if( Ball.getBall().getZ() >= 0.0 ) {		// ball is accelerating upward
+			outside_forces = airDrag( 2*Math.PI*(Ball.getBall().getSize()/2), Math.abs(accel*TIME) );
 			outside_forces += GRAVITY * TIME;	
-			ball.setZ( ball.getZ() - outside_forces); 	// update force
+			Ball.getBall().setZ( Ball.getBall().getZ() - outside_forces); 	// update force
 		}
-		else {							// ball is accelerating downwards
-			outside_forces = airDrag( 2*Math.PI*(ball.getSize()/2), Math.abs(accel*TIME) );
+		else {										// ball is accelerating downwards
+			outside_forces = airDrag( 2*Math.PI*(Ball.getBall().getSize()/2), Math.abs(accel*TIME) );
 			outside_forces -= GRAVITY * TIME;	
-			ball.setZ( ball.getZ() + outside_forces); 	// update force
+			Ball.getBall().setZ( Ball.getBall().getZ() + outside_forces); 	// update force
 		}
 			
-		accel = ball.getZ() / ball.getMass();	// get acceleration
-		velocity = accel * TIME;				// get velocity
-		System.out.println("Vz: " + velocity);
-		if( Math.abs(velocity) > terminalSpeed(ball.getMass()) ) {	// terminal check
+		accel = Ball.getBall().getZ() / Ball.getBall().getMass();			// get acceleration
+		velocity = accel * TIME;											// get velocity
+		
+		if( Math.abs(velocity) > terminalSpeed(Ball.getBall().getMass()) ) {	// terminal check
 			System.out.println("terminal dude");
 			if(velocity < 0.0 )
-				velocity =  -1.0 * terminalSpeed(ball.getMass());
+				velocity =  -1.0 * terminalSpeed(Ball.getBall().getMass());
 			else
-				velocity = terminalSpeed(ball.getMass());
+				velocity = terminalSpeed(Ball.getBall().getMass());
 		}
 		
-		// collision check !!! TODO
-
-		ball.setZPos( ball.getZPos() + velocity );		// update z position
-
-		System.out.println("Pos: (" + ball.getXPos() + ", " + ball.getYPos() + ", " + ball.getZPos() + ")");
-		System.out.println("N: (" + ball.getX() + ", " + ball.getY() + ", " + ball.getZ() + ")");
+		if(Ball.getBall().getZPos() + velocity <= 0.0) {	// collision w/ ground check
+			System.out.println("boom");
+			if(Math.abs(Ball.getBall().getZ()) < 1.03) {	// if collision is weak enough, stop bouncing
+				Ball.getBall().setZPos(0.0);
+				Ball.getBall().setZ(0.0);
+			}
+			else											// strong collision, bouncing ball
+				Ball.getBall().setZ( Ball.getBall().getZ() * -0.7 ); // simplified collision, reverse direction of force and reduce it by 30%.
+		}
+		else
+			Ball.getBall().setZPos( Ball.getBall().getZPos() + velocity );		// update z position
 		
+		if(Driver.debug) {		// debugging output
+			System.out.println("Pos: (" + Ball.getBall().getXPos() + ", " + Ball.getBall().getYPos() + ", " + Ball.getBall().getZPos() + ")");
+			System.out.println("N: (" + Ball.getBall().getX() + ", " + Ball.getBall().getY() + ", " + Ball.getBall().getZ() + ")");
+		}
 		
 		// update else TODO
 		

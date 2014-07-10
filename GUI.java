@@ -63,10 +63,10 @@ public class GUI extends JFrame{
 		JScrollPane console;
 		JLabel score1, score2;		
 		JMenuBar menuBar;
-		JMenu file;
-		JMenuItem exit, newGame;
+		JMenu file, game, developer;
+		JMenuItem exit, newGame, start, debug;
 
-		try {
+		try {	// trying to use the default system look for windows etc
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException
 				| IllegalAccessException | UnsupportedLookAndFeelException e) {
@@ -109,6 +109,35 @@ public class GUI extends JFrame{
 		file.add(newGame);
 		file.add(exit);
 		menuBar.add(file);	
+		
+		game = new JMenu("Game");
+		game.setMnemonic(KeyEvent.VK_G);
+		start = new JMenuItem("Start");
+		start.setMnemonic(KeyEvent.VK_S);
+		start.addActionListener(new ActionListener() {			// set exit's action listener
+			public void actionPerformed(ActionEvent event) {
+				System.out.println("*whistle*!!!");
+				Referee.toggleTime();
+			}
+		});		
+		game.add(start);
+		menuBar.add(game);
+		
+		developer = new JMenu("Dev");
+		developer.setMnemonic(KeyEvent.VK_D);
+		debug = new JMenuItem("Debug Toggle");
+		debug.setMnemonic(KeyEvent.VK_D);
+		debug.addActionListener(new ActionListener() {			// set exit's action listener
+			public void actionPerformed(ActionEvent event) {
+				if(Driver.debug)
+					Driver.debug = false;
+				else
+					Driver.debug = true;
+			}
+		});	
+		developer.add(debug);
+		menuBar.add(developer);
+		
 		frame.setJMenuBar(menuBar);								// add menu bar to frame
 
 		
@@ -130,25 +159,29 @@ public class GUI extends JFrame{
 		scoreBoard.setSize(250, 75);
 		scoreBoard.setPreferredSize(new Dimension(250,75));
 		scoreBoard.setLayout(new BoxLayout(scoreBoard, BoxLayout.X_AXIS));
+		
 		score1 = new JLabel("0");
 		score2 = new JLabel("0");
 		time = new JLabel("00:00");
 		consoleView = new JTextArea("Hello!");
 		consoleView.setPreferredSize(new Dimension(150,200));
 		consoleView.setEditable(false);
+		
 		console = new JScrollPane(consoleView);
 		console.setSize(150, 200);
-		console.setPreferredSize(new Dimension(150,200) );		
+		console.setPreferredSize(new Dimension(150,200) );
+		
 		stats.setSize(375,550);
 		stats.setPreferredSize(new Dimension(375,550));
 		stats.setBackground(Color.LIGHT_GRAY);
 		stats.setLayout(new BoxLayout(stats, BoxLayout.Y_AXIS));
+		
 		scoreBoard.add(score1);
 		scoreBoard.add(Box.createRigidArea(new Dimension(20,0)));
 		scoreBoard.add(time);
 		scoreBoard.add(Box.createRigidArea(new Dimension(20,0)));
 		scoreBoard.add(score2);
-		//stats.add(Box.createHorizontalStrut(375));
+		
 		stats.add(scoreBoard, CENTER_ALIGNMENT);
 		stats.add(Box.createRigidArea(new Dimension(0,10)));
 		stats.add(console);
@@ -168,6 +201,10 @@ public class GUI extends JFrame{
 		if(instance == null)
 			instance = new GUI();
 		return instance;
+	}
+	
+	public static JFrame getFrame() {
+		return frame;
 	}
 	
 	/**

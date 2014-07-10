@@ -85,7 +85,9 @@ public class Referee {
 			
 			// update clock if time is running
 			if(clock_running && (counter % 4 == 0)) {
-				GUI.getGUI().setClock(tick());				
+				GUI.getGUI().setClock(tick());
+				if(Driver.debug)
+					System.out.println(counter);
 			}
 			
 			// update physics
@@ -95,6 +97,7 @@ public class Referee {
 			// Soccer Rule Enforcing ... TODO
 			
 			// redraw? TODO
+			GUI.getFrame().repaint();
 		}
 		
 		/**

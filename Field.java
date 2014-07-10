@@ -42,8 +42,9 @@ public class Field {
 	
 	private Field() {
 		ball = Ball.getBall();
-		ball.setX(5.0);
-		ball.setY(5.0);
+		ball.setX(10.0);
+		ball.setY(25.0);
+		ball.setZPos(10.0);
 		penalty_box = new Dimension();
 		goalie_box = new Dimension();
 		center_circle = new Dimension();

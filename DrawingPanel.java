@@ -71,10 +71,10 @@ public class DrawingPanel extends JPanel {
 		g.drawLine((50 + 55 + 161), 394, (50 + 55 + 161), 460);
 		
 		// ball TODO - >>>>>>really small<<<<<<
-		g.drawOval((int)Field.getBall().getXPos()-(ball_size/2), (int)Field.getBall().getYPos()-(ball_size/2), 
+		g.drawOval((int)Ball.getBall().getXPos()-(ball_size/2), (int)Ball.getBall().getYPos()-(ball_size/2), 
 				ball_size, ball_size);
 		g.setColor(Color.orange);
-		g.fillOval((int)Field.getBall().getXPos()-(ball_size/2), (int)Field.getBall().getYPos()-(ball_size/2), 
+		g.fillOval((int)Ball.getBall().getXPos()-(ball_size/2), (int)Ball.getBall().getYPos()-(ball_size/2), 
 				ball_size, ball_size);
 		
 		
