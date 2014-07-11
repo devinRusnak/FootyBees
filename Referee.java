@@ -29,6 +29,8 @@ public class Referee {
 
 	private static Referee instance;
 	private static Timer time;
+	private static Team home;
+	private static Team visitor;
 	private long counter;
 	protected static boolean clock_running;
 	protected int mins;
@@ -38,12 +40,15 @@ public class Referee {
 	private Referee() {
 		time = new Timer();
 		clock_running = true;
-		time.scheduleAtFixedRate(new Updater(), 5000, 250);
+		time.scheduleAtFixedRate(new Updater(), 5000, 100);
 		time.scheduleAtFixedRate(new GraphicsUpdater(), 0, 50);
 		counter = 0;
 		secs = 0;
 		mins = 0;
 		stopage = 1;
+		
+		home = Team.getHome();
+		visitor = Team.getVisitor();
 	}
 	
 	/**
@@ -67,16 +72,23 @@ public class Referee {
 	}
 	
 	/**
+	 * 
+	 */
+	private void outOfBounds() {
+		GUI.setText("Out of Bounds!");
+	}
+	
+	/**
 	 *  This timer task is used to time the updating of all the physics 
 	 *  engine items.
 	 */
 	private class Updater extends TimerTask {
 
 		/**
-		 * Updating function that gets called every 250 milliseconds by the 
+		 * Updating function that gets called every 100 milliseconds by the 
 		 * referee class timer. The long counter acts to allow the clock to
 		 * be updated every second. 
-		 * 	Every 250 milliseconds:
+		 * 	Every 100 milliseconds:
 		 * 		counter is updated.
 		 * 		physics update is called.
 		 * 		
@@ -88,17 +100,26 @@ public class Referee {
 			counter++;
 			
 			// update clock if time is running
-			if(clock_running && (counter % 4 == 0)) {
+			if(clock_running && (counter == 10)) {
 				GUI.getGUI().setClock(tick());
+				counter = 0;		// reset counter
 				if(Driver.debug)
-					System.out.println(counter);
+					System.out.println(GUI.getGUI().getClock());
 			}
 			
 			// update physics
 			Physics.getPhysics().update();
-			
-			
+						
 			// Soccer Rule Enforcing ... TODO
+			
+			// goal check
+			
+			// out of bounds check
+			if(Ball.getBall().getXPos() < 49 || Ball.getBall().getXPos() > (Field.getWidth()*4)+50)
+				outOfBounds();
+			else if(Ball.getBall().getYPos() < 39 || Ball.getBall().getYPos() > (Field.getLength()*4)+40)
+				outOfBounds();
+			
 			
 		}
 		

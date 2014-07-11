@@ -77,12 +77,12 @@ public class DrawingPanel extends JPanel {
 		g.fillOval((int)Ball.getBall().getXPos()-(ball_size/2), (int)Ball.getBall().getYPos()-(ball_size/2), 
 				ball_size, ball_size);
 		g.setColor(Color.yellow);
-		g.drawOval( ((int)Ball.getBall().getXPos() - ((int)Ball.getBall().getZPos()*3) ), 
-				((int)Ball.getBall().getYPos() - ((int)Ball.getBall().getZPos()*3) ), 
-				((int)Ball.getBall().getZPos()*6), 
-				((int)Ball.getBall().getZPos()*6) ); 	// draw circle proportional to the height of the ball
-		
-		
+		g.drawOval( ((int)Ball.getBall().getXPos()) - (ball_size * (int)(Ball.getBall().getZPos() * 1.5)), 
+				((int)Ball.getBall().getYPos()) - (ball_size * (int)(Ball.getBall().getZPos() * 1.5)), 
+				ball_size*(int)(Ball.getBall().getZPos() * 3), 
+				ball_size*(int)(Ball.getBall().getZPos() * 3) ); 	// draw circle proportional to the height of the ball
+
+
 		// draw players TODO
 			// two for loops, get updated positions!, draw from that 
 	}

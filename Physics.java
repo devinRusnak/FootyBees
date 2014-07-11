@@ -32,7 +32,7 @@ public class Physics {
 	private static final double DRAG_COEFFICIENT = 0.0026;		// text-book
 	private static final double ROLLING_COEFFICIENT = 0.31;		// online soccer problem
 	private static final double GRAVITY = 9.8;					// m/s^2
-	private static final double TIME = 0.25;					// frequency of update getting called
+	private static final double TIME = 0.1;						// frequency of update getting called
 	
 	// constructor
 	private Physics() {	}
@@ -45,18 +45,6 @@ public class Physics {
 		if(instance == null)
 			instance = new Physics();
 		return instance;
-	}
-	
-	public double getX() {
-		return 0.0;
-	}
-	
-	public double getY() {
-		return 0.0;
-	}
-	
-	public double getZ() {
-		return 0.0;
 	}
 	
 	/**

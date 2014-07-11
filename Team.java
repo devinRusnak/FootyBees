@@ -22,13 +22,91 @@
  */
 package footybees;
 
+import java.util.ArrayList;
+
 public class Team {
 	
+	// class instance variables
+	private static Team home;
+	private static Team visitor;
 	
-	public Team() {
-		
+	// instance variables
+	private String name;
+	private ArrayList<Player> squad;
+	private String formation;
+	
+	private Team() {								// default constructor
+		name = "The Defaults";
+		squad = new ArrayList<Player>();
+		formation = "default";
+		getSquad();
 	}
 	
+	private Team(String n) {						// full-ish constructor
+		name = n;
+		squad = new ArrayList<Player>();
+		formation = "default";
+		getSquad();
+	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public static Team getHome() {
+		if(home == null) 
+			home = new Team("Hooloovooz");
+		return home;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static Team getVisitor() {
+		if(visitor == null)
+			visitor = new Team("Frog Stars");
+		return visitor;
+	}
+	
+	/**
+	 * 
+	 * @param p
+	 */
+	private void addToSquad(Player p) {
+		squad.add(p);
+	}
+	
+	/**
+	 * 
+	 * @param p
+	 */
+	private void removeFromSquad(Player p) {
+		squad.remove(p);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public int sizeOfTeam() {
+		return squad.size();
+	}
+	
+	/**
+	 * 
+	 */
+	private void getSquad() {
+		// team specific stuff
+		if(name == "Hooloovooz") {
+			
+		}
+		else {
+			
+		}
+		
+		// general team stuff
+			
+	}
 
 }
