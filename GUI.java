@@ -22,7 +22,6 @@
  */
 package footybees;
 
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -32,6 +31,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -39,6 +39,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -64,7 +65,9 @@ public class GUI extends JFrame{
 		JLabel score1, score2;		
 		JMenuBar menuBar;
 		JMenu file, game, developer;
-		JMenuItem exit, newGame, start, debug;
+		JMenuItem exit, newGame, start;
+		JRadioButtonMenuItem d2, d3, debug;
+		ButtonGroup radio_group;
 
 		try {	// trying to use the default system look for windows etc
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -107,6 +110,7 @@ public class GUI extends JFrame{
 			}
 		});
 		file.add(newGame);
+		file.addSeparator();
 		file.add(exit);
 		menuBar.add(file);	
 		
@@ -121,11 +125,35 @@ public class GUI extends JFrame{
 			}
 		});		
 		game.add(start);
+		game.addSeparator();
+		d2 = new JRadioButtonMenuItem("2-D");
+		d2.setSelected(true);
+		d2.setMnemonic(KeyEvent.VK_2);
+		d2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				System.out.println("Simplistic Mode");
+				Driver.simple = true;
+			}
+		});
+		game.add(d2);
+		d3 = new JRadioButtonMenuItem("3-D");
+		d3.setSelected(false);
+		d3.setMnemonic(KeyEvent.VK_3);
+		d3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				System.out.println("Realistic Mode");
+				Driver.simple = false;
+			}
+		});
+		game.add(d3);
+		radio_group = new ButtonGroup();
+		radio_group.add(d2);
+		radio_group.add(d3);
 		menuBar.add(game);
 		
 		developer = new JMenu("Dev");
 		developer.setMnemonic(KeyEvent.VK_D);
-		debug = new JMenuItem("Debug Toggle");
+		debug = new JRadioButtonMenuItem("Debug");
 		debug.setMnemonic(KeyEvent.VK_D);
 		debug.addActionListener(new ActionListener() {			// set exit's action listener
 			public void actionPerformed(ActionEvent event) {

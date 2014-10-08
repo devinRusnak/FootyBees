@@ -36,15 +36,13 @@ public class Field {
 	private static final double LENGTH = 105.0;
 	private static final double ENDLINE_TO_PK = 11.0;
 	private static final double CIRCLE = 9.15;
+	private static final Point CENTER_FIELD = new Point( (int)(50+(Field.getWidth()/2)), (int)(40+(Field.getLength()/2)) );
 	private Dimension penalty_box;
 	private Dimension goalie_box;
 	private Dimension center_circle;	
 	
 	private Field() {
 		ball = Ball.getBall();
-		ball.setX(10.0);
-		ball.setY(25.0);
-		ball.setZPos(25.0);
 		penalty_box = new Dimension();
 		goalie_box = new Dimension();
 		center_circle = new Dimension();
@@ -61,7 +59,7 @@ public class Field {
 		
 		// check if pitch has been created yet
 		// if not initialize the pitch items
-		if( pitch == null) 
+		if( pitch == null ) 
 			pitch = new Field();		
 		return pitch;
 	}
@@ -72,24 +70,16 @@ public class Field {
 		return ball;
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public double[] getBallPosition() {
-		
-		double[] ball_pos = new double[3];
-		
-		
-		return ball_pos;
-	}
-	
 	public static double getWidth() {
 		return WIDTH;
 	}
 	
 	public static double getLength() {
 		return LENGTH;
+	}
+	
+	public static Point getCenter() {
+		return CENTER_FIELD;
 	}
 	
 }

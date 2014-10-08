@@ -31,6 +31,7 @@ public class Physics {
 	private static final double AIR_DENSITY = 1.25;				// kg/m^3
 	private static final double DRAG_COEFFICIENT = 0.0026;		// text-book
 	private static final double ROLLING_COEFFICIENT = 0.31;		// online soccer problem
+	private static final int PLAYER_MASS = 68;					// kilograms
 	private static final double GRAVITY = 9.8;					// m/s^2
 	private static final double TIME = 0.1;						// frequency of update getting called
 	
@@ -56,7 +57,7 @@ public class Physics {
 	 * @param angleXY - angle counter-clockwise from the positive x-axis towards the positive y-axis, pitch?
 	 * @param angleXZ - angle counter-clockwise from the positive x-axis towards the positive Z-axis, yaw?
 	 */
-	public void kick(double force, double angleXY, double angleXZ) {
+	public void kickBall(double force, double angleXY, double angleXZ) {
 		double x, y, z;
 		// compute z_vector
 		z = Ball.getBall().getZ() + (force * Math.sin(angleXZ));		// v[0z] = v[0]sin(a[0])
@@ -101,7 +102,7 @@ public class Physics {
 	}
 	
 	/**
-	 *  t = 0.25s
+	 *  t = 0.01s
 	 */
 	public void update() {
 		double accel = 0.0;
@@ -112,7 +113,8 @@ public class Physics {
 		//	...apply forces, then calculate distance moved.
 		
 		// *** X vector computation *** //
-		accel = Ball.getBall().getX() / Ball.getBall().getMass();				
+		accel = Ball.getBall().getX() / Ball.getBall().getMass();	
+		//System.out.println("A1 " + accel);
 		outside_forces = airDrag( 2*Math.PI*(Ball.getBall().getSize()/2), Math.abs(accel*TIME) );
 		
 		if(Ball.getBall().getZPos() <= 1.0) 							// on ground apply rolling friction too
@@ -127,6 +129,7 @@ public class Physics {
 			Ball.getBall().setX(0.0);
 		
 		accel = Ball.getBall().getX() / Ball.getBall().getMass();		// get acceleration 
+		//System.out.println("A2 " + accel);
 		velocity = accel * TIME;										// get velocity
 		
 		if( Math.abs(velocity) > terminalSpeed(Ball.getBall().getMass()) ) {	// terminal check
@@ -136,7 +139,7 @@ public class Physics {
 			else
 				velocity = terminalSpeed(Ball.getBall().getMass());
 		}
-		if( Math.abs(Ball.getBall().getX()) < 0.03 ) 		// stop the ball from rolling slowly forever
+		if( Math.abs(Ball.getBall().getX()) < 0.001 ) 		// stop the ball from rolling slowly forever
 			Ball.getBall().setX(0.0);
 		else
 			Ball.getBall().setXPos( Ball.getBall().getXPos() + velocity );		// update x position			
@@ -217,7 +220,63 @@ public class Physics {
 			System.out.println("N: (" + Ball.getBall().getX() + ", " + Ball.getBall().getY() + ", " + Ball.getBall().getZ() + ")");
 		}
 		
-		// update else TODO
+		// update players TODO
+		for(int i=0; i<11; i++) {
+			
+		}
 		
 	} // end update()
+	
+	public void updateSimple() {
+		double accel = 0.0;
+		double velocity = 0.0;
+		double outside_forces = 0.25;				// set value of external roll damping forces
+		double mass = Ball.getBall().getMass();
+		
+		// Update Ball
+			// x_vector computation
+		if(Ball.getBall().getX() < 0.025)			// damp check
+			Ball.getBall().setX(0.0);
+		else {										// apply damping force
+			if(Ball.getBall().getX() > 0.0)			// determine direction of force
+				Ball.getBall().setX( Ball.getBall().getX() - outside_forces );	
+			else
+				Ball.getBall().setX( Ball.getBall().getX() + outside_forces );
+			
+			accel = Ball.getBall().getX() * mass;
+			velocity = accel * TIME;
+			
+			Ball.getBall().setXPos( Ball.getBall().getXPos() + velocity );
+		}
+		
+			// y_vector computation
+		if(Ball.getBall().getY() < 0.025)			// damp check
+			Ball.getBall().setY(0.0);
+		else {										// apply damping force
+			if(Ball.getBall().getY() > 0.0)			// determine direction of force
+				Ball.getBall().setY( Ball.getBall().getY() - outside_forces );	
+			else
+				Ball.getBall().setY( Ball.getBall().getY() + outside_forces );
+			
+			accel = Ball.getBall().getY() * mass;
+			velocity = accel * TIME;
+			
+			Ball.getBall().setYPos( Ball.getBall().getYPos() + velocity );
+		}
+		
+		// update players
+		for(int i=0; i<11; i++) {
+			
+			// x_vector computation
+			accel = Team.getHome().getSquad().get(i).getX() * PLAYER_MASS;
+			// accel = 0
+			velocity = accel * TIME;
+			Team.getHome().getSquad().get(i).setXPos(Team.getHome().getSquad().get(i).getXPos() + velocity);
+			
+			
+			// y_vector computation
+			
+		}
+		
+	} // end updateSimple()
 }

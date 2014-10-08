@@ -24,23 +24,25 @@ package footybees;
 
 public class PhysicalObject {
 
-	protected static double x_vector;		// newtons
-	protected static double y_vector;		// newtons
-	protected static double z_vector;		// newtons
-	protected static double[] position;		// meters
-	protected static double mass;			// kilo-grams
+	protected double x_vector;		// newtons
+	protected double y_vector;		// newtons
+	protected double z_vector;		// newtons
+	protected double[] position;		// meters
+	protected double mass;			// kilo-grams
 	
 	public PhysicalObject() {
 		x_vector = 0.0;
 		y_vector = 0.0;
 		z_vector = 0.0;
-		mass = 0.0;
+		position = new double[3];
+		mass = 68.0;
 	}
 	
 	public PhysicalObject(double x, double y, double z, double m) {
 		x_vector = x;
 		y_vector = y;
 		z_vector = z;
+		position = new double[3];
 		mass = m;
 	}
 	
@@ -48,6 +50,7 @@ public class PhysicalObject {
 		x_vector = p.getX();
 		y_vector = p.getY();
 		z_vector = p.getZ();
+		position = new double[3];		
 		mass = p.getMass();
 	}
 	

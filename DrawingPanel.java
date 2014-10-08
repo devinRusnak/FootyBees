@@ -31,9 +31,10 @@ public class DrawingPanel extends JPanel {
 
 	
 	public void paintComponent(Graphics g) {
+		Player tempHome, tempAway;
 		int width = (int)(Field.getWidth()*4);
 		int length = (int)(Field.getLength()*4);
-		int ball_size = (int)(Field.getBall().getSize()*20);
+		int ball_size = (int)(Ball.getBall().getSize()*20);
 		
 		// background
 		g.setColor(Color.lightGray);
@@ -70,7 +71,7 @@ public class DrawingPanel extends JPanel {
 		g.drawLine((50 + 55), 394, (50 + 55), 460);
 		g.drawLine((50 + 55 + 161), 394, (50 + 55 + 161), 460);
 		
-		// ball 
+		// ball
 		g.drawOval((int)Ball.getBall().getXPos()-(ball_size/2), (int)Ball.getBall().getYPos()-(ball_size/2), 
 				ball_size, ball_size);
 		g.setColor(Color.orange);
@@ -83,8 +84,17 @@ public class DrawingPanel extends JPanel {
 				ball_size*(int)(Ball.getBall().getZPos() * 3) ); 	// draw circle proportional to the height of the ball
 
 
-		// draw players TODO
-			// two for loops, get updated positions!, draw from that 
+		// players TODO
+		for(int i=0; i < 11; i++) {
+			tempHome = Team.getHome().getSquad().get(i);
+			tempAway = Team.getVisitor().getSquad().get(i);
+			
+			g.drawRect((int)tempHome.getXPos()*4, (int)tempHome.getYPos()*4, 8, 8);
+			g.fillRect((int)tempHome.getXPos()*4-1, (int)tempHome.getYPos()*4-1, 7, 7);
+			
+			g.drawRect((int)tempAway.getXPos()*4, (int)tempAway.getYPos()*4, 8, 8);
+			g.fillRect((int)tempAway.getXPos()*4-1, (int)tempAway.getYPos()*4-1, 7, 7);
+		}
 	}
 
 }

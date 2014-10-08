@@ -25,6 +25,7 @@ package footybees;
 public class Decision {
 
 	private static Decision instance;
+	// other class variables???
 	
 	private Decision() {
 		
@@ -39,4 +40,49 @@ public class Decision {
 			instance = new Decision();
 		return instance;
 	}
+	
+	/**
+	 * 
+	 * @param p
+	 * @return
+	 */
+	public static Player think(Player p) {
+		
+		// clock not running, get into position
+		if(!Referee.clock_running) 
+			 return getIntoPosition(p);
+		
+		else {
+			// Heuristic 1  TODO
+			
+		}
+		
+		return p;
+	}
+	
+	/**
+	 * 
+	 * @param p
+	 * @return
+	 */
+	private static Player getIntoPosition(Player p) {
+		if(Driver.debug)
+			System.out.println("getting into position");	
+		
+		
+		if(p.getNumber() == 11) {		// goalie, get in box
+			if(p.getXPos() > Field.getCenter().getX()) {
+				p.setX(10);
+			}
+			
+			return p;
+		}
+			
+		if(p.getSide() == 1) {
+
+		}
+	
+		return p;
+	}
+	
 }

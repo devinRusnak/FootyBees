@@ -31,6 +31,7 @@ public class Referee {
 	private static Timer time;
 	private static Team home;
 	private static Team visitor;
+	private static String clock;
 	private long counter;
 	protected static boolean clock_running;
 	protected int mins;
@@ -39,7 +40,7 @@ public class Referee {
 	
 	private Referee() {
 		time = new Timer();
-		clock_running = true;
+		clock_running = false;
 		time.scheduleAtFixedRate(new Updater(), 5000, 100);
 		time.scheduleAtFixedRate(new GraphicsUpdater(), 0, 50);
 		counter = 0;
@@ -48,7 +49,9 @@ public class Referee {
 		stopage = 1;
 		
 		home = Team.getHome();
+		home.setFormation("4-3-2-1");
 		visitor = Team.getVisitor();
+		visitor.setFormation("4-3-2-1");
 	}
 	
 	/**
@@ -100,16 +103,18 @@ public class Referee {
 			counter++;
 			
 			// update clock if time is running
-			if(clock_running && (counter == 10)) {
+			if(clock_running && (counter%10 == 0)) {
 				GUI.getGUI().setClock(tick());
-				counter = 0;		// reset counter
 				if(Driver.debug)
 					System.out.println(GUI.getGUI().getClock());
 			}
 			
 			// update physics
-			Physics.getPhysics().update();
-						
+			if(!Driver.simple)
+				Physics.getPhysics().update();
+			else
+				Physics.getPhysics().updateSimple();
+			
 			// Soccer Rule Enforcing ... TODO
 			
 			// goal check
@@ -120,7 +125,11 @@ public class Referee {
 			else if(Ball.getBall().getYPos() < 39 || Ball.getBall().getYPos() > (Field.getLength()*4)+40)
 				outOfBounds();
 			
-			
+			// Player Decisions
+			if(counter%10 == 0) {			// update player decision every 10 
+				Team.getHome().update();
+				Team.getVisitor().update();
+			}
 		}
 		
 		/**
@@ -129,21 +138,25 @@ public class Referee {
 		 * 
 		 * @return	a new string that contains the time formated.
 		 */
-		private String tick() {
+		private String tick() {			
 			secs++; // tock!
 			
 			if(secs == 60) {
 				secs = 0;
 				mins++;
 			}
+			if(clock == null)			// check if clock has been initialized
+				clock = new String();
+			
 			if( (secs%60) < 10 && mins < 10)
-				return new String(mins + "0 : 0" + secs);
+				clock = (mins + "0 : 0" + secs);
 			else if ( (secs%60) < 10 )
-				return new String(mins + " : 0" + secs);
+				clock = (mins + " : 0" + secs);
 			else if ( mins < 10 )
-				return new String(mins + "0 : " + secs);
+				clock = (mins + "0 : " + secs);
 			else
-				return new String(mins + " : " + secs);
+				clock = (mins + " : " + secs);
+			return clock;	// return formatted clock string
 		}
 		
 	} // end Updater class
